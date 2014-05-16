@@ -66,28 +66,29 @@ void init_game()
     slider_left.width  = 20;
     slider_left.height = 250;
 
-	Up.left = 690;
-	Up.top = 190;
-	Up.width = 20;
-	Up.height = 20;
+    //Assign values to Up button
+    Up.left = 690;
+    Up.top = 190;
+    Up.width = 20;
+    Up.height = 20;
 
-	Down.left = 730;
-	Down.top = 190;
-	Down.width = 20;
-	Down.width = 20;
+    //Assign values to Down button
+    Down.left = 730;
+    Down.top = 190;
+    Down.width = 20;
+    Down.height = 20;
 
-    //Fill Colour to the Rectangle Shapes for Player Slider, AI Slider and Ball respectively
-    //R1.setFillColor(Color::Red);
-    //R2.setFillColor(Color::Blue);
+    //Fill Colour to the Rectangle Shape for Ball,Up and Down respectively
+    
     R3.setFillColor(Color::Magenta);
-
-	UpB.setFillColor(Color::Cyan);
-	DnB.setFillColor(Color::Green);
+    UpB.setFillColor(Color::Cyan);
+    DnB.setFillColor(Color::Green);
 
     //Apply velocity to the Ball
     ballXvel = BALL_VEL;
     ballYvel = BALL_VEL;
 
+	//Loading and Applying Slider images
 	if(!slider_img.loadFromFile("C:/Users/intel/Documents/Visual Studio 2010/Projects/pingpong/Debug/Asset/ai_slider.png")) // loads image as texture into bgtex
 	{
 		std::cout<<"\nError loading image";
@@ -107,18 +108,8 @@ void init_game()
 
 void handle_input(RenderWindow *window)
 {
-    //If Up arrow is pressed
-    //if(Keyboard::isKeyPressed(Keyboard::W))
-     // playerYvel = -(SLIDER_VEL);
-
-    //If Down arrow is pressed
-   // else if(Keyboard::isKeyPressed(Keyboard::A))
-    //  playerYvel = SLIDER_VEL;
-
-    //If no key is pressed
-  //  else
-     // playerYvel = 0;
-
+    
+//Handling inputs with Buttons and sf::Mouse events
 	if(Mouse::isButtonPressed(Mouse::Left))
 	{
 		Vector2i  position =sf::Mouse::getPosition(*window);
@@ -129,8 +120,6 @@ void handle_input(RenderWindow *window)
 			playerYvel = -(SLIDER_VEL);
 		else 
 			playerYvel=0;	
-		
-		 
 	}		
 	else
 		playerYvel = 0;
@@ -198,11 +187,12 @@ void display(RenderWindow *window)
     R3.setPosition(ball.left,ball.top);
     window->draw(R3);
 		
-	UpB.setPosition(Up.left,Up.top);
-	window->draw(UpB);
-
-	DnB.setPosition(Down.left,Down.top);
-	window->draw(DnB);
+    //Draw Up and Down button
+    UpB.setPosition(Up.left,Up.top);
+    window->draw(UpB);
+    
+    DnB.setPosition(Down.left,Down.top);
+    window->draw(DnB);
 }
 
 void manage_score(RenderWindow *window)
@@ -238,11 +228,11 @@ void manage_score(RenderWindow *window)
 	text1.setPosition(Vector2f(700,30));
 
 	
-	// Display 
+	// Display score for player
 	window->draw(text);
 
 	
-	//Display score
+	//Display score for AI
 	window->draw(text1);
 }
 
@@ -251,7 +241,7 @@ bool result(RenderWindow *window)
 	Font font;
 	font.loadFromFile("C:/Windows/Fonts/Verdana.ttf");
 
-	
+	//Checks who wins the game (reaches 10 points first)
 		if(SCORE_PLAYER==10)
 	{
 		
@@ -280,7 +270,7 @@ bool result(RenderWindow *window)
 
 void endgame()
 {
-	
+  //Ends the game by freezing all elements	
 	ballXvel=0;
 	ballYvel=0;
 	BALL_VEL=0;
