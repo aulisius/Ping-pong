@@ -121,19 +121,14 @@ void handle_input(RenderWindow *window)
 
 	if(Mouse::isButtonPressed(Mouse::Left))
 	{
-		Vector2i downco;
-		downco.x=Down.left;
-		downco.y=Down.top;
 		Vector2i  position =sf::Mouse::getPosition(*window);
 		
-		Up.contains(position)?playerYvel = -(SLIDER_VEL) :(Down.contains(position)? playerYvel= SLIDER_VEL : playerYvel = 0) ;
-
-		//if(Down.contains(position))
-		//	playerYvel = (SLIDER_VEL);			
-		//else if(Up.contains(position))
-		//	playerYvel = -(SLIDER_VEL);
-		//else 
-		//	playerYvel=0;	
+		if(Down.contains(position))
+			playerYvel = (SLIDER_VEL);			
+		else if(Up.contains(position))
+			playerYvel = -(SLIDER_VEL);
+		else 
+			playerYvel=0;	
 		
 		 
 	}		
