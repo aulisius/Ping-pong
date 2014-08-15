@@ -6,7 +6,6 @@ int main()
 {
     // create the window to show your game 
     RenderWindow *window;
-	bool a;
     window=new RenderWindow(VideoMode(800, 600),"Ping Pong");
     window->setFramerateLimit(20);
     Sprite *background; // a pointer for sprite
@@ -21,7 +20,7 @@ int main()
 
 // if you wanna clip a particular area from the texture and put into the sprite you can // use the following setTextureRect() function
 
-	background->setTextureRect(Rect<int>(0,0,610,600));  
+	background->setTextureRect(IntRect(0,0,610,600));  
 
 	 
     //Initialise the game objects
@@ -36,7 +35,7 @@ int main()
         while (window->pollEvent(event))
         {
             // "close requested" event: we close the window
-            if (event.type == Event::Closed)
+            if(event.type == Event::Closed || event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)
                 window->close();
         }
 
@@ -53,28 +52,25 @@ int main()
 		window->clear(sf::Color::White);
 
 	    // draw the background image
-
 		window->draw(*background);
 
         // draw everything else here...
-
         display(window);
 
 		//check score
-
 		manage_score(window);
-
-		//check result
-
-		a=result(window);
 		
-		if(a)
+		if(result(window))
 		{
 			endgame();
 		}
         // end the current frame
         window->display();
     }
+	
+	//free memory
+	delete background;
+	delete window;
 
     return 0;
 }
