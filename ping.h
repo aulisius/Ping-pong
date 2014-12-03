@@ -1,5 +1,4 @@
 #include "SFML\Graphics.hpp"
-
 #include <iostream>
 using namespace sf;
 
@@ -22,18 +21,16 @@ Rect<int> Down;
 
 //Velocity variables for Player and Ball
 int playerYvel = 0;
-char SCP='0'; //Player Score
-char SCA='0'; //AI Score
 int ballYvel = 0;
 int ballXvel = 0;
 
-//Rectangle Shape for Player Slider, AI Slider and Ball respectively
-//RectangleShape R1(Vector2f(20,200));
-//RectangleShape R2(Vector2f(20,200));
+char SCP='0'; //Player Score
+char SCA='0'; //AI Score
+
+//Rectangle Shape for Ball and the Buttons respectively
 RectangleShape R3(Vector2f(20,20));
 RectangleShape UpB(Vector2f(20,20));
 RectangleShape DnB(Vector2f(20,20));
-
 
 //Initialise scores
 int SCORE_PLAYER = 0,SCORE_AI = 0;
@@ -46,7 +43,7 @@ Texture slider_img;
 Sprite *sliderp;
 Texture slider_img_p;
 
-void init_game()
+void onCreate()
 {
     //Assign values to Ball Rectangle
     ball.left   = 30;
@@ -79,7 +76,6 @@ void init_game()
     Down.height = 20;
 
     //Fill Colour to the Rectangle Shape for Ball,Up and Down respectively
-    
     R3.setFillColor(Color::Magenta);
     UpB.setFillColor(Color::Cyan);
     DnB.setFillColor(Color::Green);
@@ -88,32 +84,65 @@ void init_game()
     ballXvel = BALL_VEL;
     ballYvel = BALL_VEL;
 
-	//Loading and Applying Slider images
+    //Loading and Applying Slider images
 	if(!slider_img.loadFromFile("C:/Users/intel/Documents/Visual Studio 2010/Projects/pingpong/Debug/Asset/ai_slider.png")) // loads image as texture into bgtex
 	{
 		std::cout<<"\nError loading image";
 	}
-	slider=new Sprite();  // creating sprite object
-	slider->setTexture(slider_img);   // you set the texture to the sprite
-
+	else
+	{	
+		slider=new Sprite();  // creating sprite object
+		slider->setTexture(slider_img);   // you set the texture to the sprite
+	}
 	if(!slider_img_p.loadFromFile("C:/Users/intel/Documents/Visual Studio 2010/Projects/pingpong/Debug/Asset/player_slider.png")) // loads image as texture into bgtex
 	{
 		std::cout<<"\nError loading image";
 	}
-	sliderp=new Sprite();  // creating sprite object
-	sliderp->setTexture(slider_img_p);   // you set the texture to the sprite
+	else
+	{
+		sliderp=new Sprite();  // creating sprite object
+		sliderp->setTexture(slider_img_p);   // you set the texture to the sprite
+	}
+	
+	//Loading fonts for Score and Result respectively
+	Font font,font1;
+	font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
+	font1.loadFromFile("C:/Windows/Fonts/Verdana.ttf");
 
+	 // Initialising Player score
+	Text text(SCP, font);
+	text.setCharacterSize(30);
+	text.setStyle(sf::Text::Bold);
+	text.setColor(sf::Color::Red);
+	text.setPosition(Vector2f(750,30));
 
+	// Initialising AI score
+	Text text1(SCA,font);
+	text1.setCharacterSize(30);
+	text1.setStyle(sf::Text::Bold);
+	text1.setColor(sf::Color::Blue);
+	text1.setPosition(Vector2f(700,30));
+
+	//Initialising result text
+	Text text("You WON", font1);
+	text.setCharacterSize(100);
+	text.setStyle(sf::Text::Bold);
+	text.setColor(sf::Color::White);
+	text.setPosition(Vector2f(100,250));
+		
+	Text text1("You LOSE", font1);
+	text1.setCharacterSize(100);
+	text1.setStyle(sf::Text::Bold);
+	text1.setColor(sf::Color::White);
+	text1.setPosition(Vector2f(90,250));
 }
 
-void handle_input(RenderWindow *window)
+void InputHandler(RenderWindow *window)
 {
-    
-//Handling inputs with Buttons and sf::Mouse events
+    //Handling inputs with Buttons and sf::Mouse events
 	if(Mouse::isButtonPressed(Mouse::Left))
 	{
-		Vector2i  position =sf::Mouse::getPosition(*window);
-		
+		Vector2i  position = sf::Mouse::getPosition(*window);
 		if(Down.contains(position))
 			playerYvel = (SLIDER_VEL);			
 		else if(Up.contains(position))
@@ -123,12 +152,9 @@ void handle_input(RenderWindow *window)
 	}		
 	else
 		playerYvel = 0;
-	
-
-
 }
 
-void update()
+void GameUpdate()
 {
     //If ball collides with any of the two sliders
     if(ball.intersects(slider_right) || ball.intersects(slider_left) )
@@ -158,11 +184,9 @@ void update()
 
     //Change Player Slider's position with respect to velocity
     slider_right.top += playerYvel;
-	
-		
 }
 
-void perform_ai()
+void AIOperation()
 {
     //If Ball is above the AI Slider 
     if(ball.top < slider_left.top)
@@ -173,7 +197,7 @@ void perform_ai()
       slider_left.top += SLIDER_VEL;
 }
 
-void display(RenderWindow *window)
+void Display(RenderWindow *window)
 {
     //Displace the Player Slider and draw it on screen
    sliderp->setPosition(slider_right.left,slider_right.top);
@@ -195,86 +219,48 @@ void display(RenderWindow *window)
     window->draw(DnB);
 }
 
-void manage_score(RenderWindow *window)
+void ScoreManager(RenderWindow *window)
 {
 	//Updating score
-
 	if(SCP<SCORE_PLAYER+48)
 		SCP += 1;
 	else if(SCA<SCORE_AI+48)
 		SCA +=1;
 	else
-		{
-			SCP+=0;
-			SCA+=0;
-		}
-
-	//Loading font
-	Font font;
-	font.loadFromFile("C:/Windows/Fonts/Arial.ttf");
-
-	 // Initialising Player score
-	Text text(SCP, font);
-	text.setCharacterSize(30);
-	text.setStyle(sf::Text::Bold);
-	text.setColor(sf::Color::Red);
-	text.setPosition(Vector2f(750,30));
-
-	// Initialising AI score
-	Text text1(SCA,font);
-	text1.setCharacterSize(30);
-	text1.setStyle(sf::Text::Bold);
-	text1.setColor(sf::Color::Blue);
-	text1.setPosition(Vector2f(700,30));
-
-	
+	{
+		SCP+=0;
+		SCA+=0;
+	}
 	// Display score for player
 	window->draw(text);
 
-	
 	//Display score for AI
 	window->draw(text1);
 }
 
-bool result(RenderWindow *window)
+bool ResultManager(RenderWindow *window)
 {
-	Font font;
-	font.loadFromFile("C:/Windows/Fonts/Verdana.ttf");
-
 	//Checks who wins the game (reaches 10 points first)
-		if(SCORE_PLAYER==10)
+	if(SCORE_PLAYER==10)
 	{
-		
-		Text text("You WON", font);
-		text.setCharacterSize(100);
-		text.setStyle(sf::Text::Bold);
-		text.setColor(sf::Color::White);
-		text.setPosition(Vector2f(100,250));
 		window->draw(text);
 		return true;
-
 	}
-		 else if(SCORE_AI==10)
-		{
-			Text text1("You LOSE", font);
-		text1.setCharacterSize(100);
-		text1.setStyle(sf::Text::Bold);
-		text1.setColor(sf::Color::White);
-		text1.setPosition(Vector2f(90,250));
+	else if(SCORE_AI==10)
+	{
 		window->draw(text1);
 		return true;
-		}
-		 else 
-			 return false;
+	}
+	else 
+		 return false;
 }
 
-void endgame()
+void onEnd()
 {
-  //Ends the game by freezing all elements	
+  	//Ends the game by freezing all elements	
 	ballXvel=0;
 	ballYvel=0;
 	BALL_VEL=0;
 	SLIDER_VEL=0;
-
 }
 
