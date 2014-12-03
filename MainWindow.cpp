@@ -59,7 +59,7 @@ int main()
 		//checks score
 		ScoreManager(window);
 		
-		if(result(window))
+		if(ResultManager(window))
 		{
 			onEnd();
 		}
