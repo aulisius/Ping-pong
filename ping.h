@@ -184,6 +184,8 @@ void GameUpdate()
 
     //Change Player Slider's position with respect to velocity
     slider_right.top += playerYvel;
+
+	
 }
 
 void AIOperation()
